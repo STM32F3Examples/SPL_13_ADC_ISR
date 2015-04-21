@@ -40,15 +40,16 @@ all: salida.elf
 objects:
 	mkdir objects
 salida.elf: objects $(COBJECTS) $(ASMOBJECTS) $(LIB_FILE_NAMES)
-	$(CC) -Wl,--gc-sections -specs=nano.specs $(CFLAGS) objects/*.o $(LFLAGS) -o $@
+	$(CC) -Wl,--gc-sections -specs=nano.specs $(CFLAGS) objects/*.o $(LFLAGS) -o $@ ;
+	arm-none-eabi-size $@ ;
 $(COBJECTS): %.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
 $(ASMOBJECTS): %.o: %.S
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
 .PHONY:clean rebuild burn
 clean:
-	rm -f  *.elf
-	rm -fr objects
+	rm -f  *.elf ;
+	rm -fr objects ;
 rebuild: clean all
 burn: salida.elf
 	openocd -f board/st_nucleo_f3.cfg -c"init" -c"sleep 300"  -c"program erase salida.elf" -c"sleep 300" -c"reset" -c"shutdown"
