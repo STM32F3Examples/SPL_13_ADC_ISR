@@ -16,6 +16,10 @@ int main(){
 	timer17_enableIRQ();
 	timer17_start();
 	
+	timer6_init(8000,1);
+	timer6_enableIRQ();
+	timer6_start();
+	
 	while(1){
 	}
 }
@@ -29,7 +33,13 @@ int timer16_counter = 0;
 void timer16_callback(void){
 	timer16_counter++;
 }
+
 int timer17_counter = 0;
 void timer17_callback(void){
 	timer17_counter++;
+}
+
+int timer6_counter = 0;
+void timer6_callback(void){
+	timer6_counter++;
 }

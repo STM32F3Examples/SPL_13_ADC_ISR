@@ -1,7 +1,7 @@
 #include "ctimers_stm32f3.h"
 #include "stm32f30x.h"                  // Device header
 
-void timer2_init(int period,int use_us){
+void timer2_init(uint32_t period,int use_us){
 	int prescaler = 0;
 	SystemCoreClockUpdate();
 	
@@ -172,3 +172,47 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void){
 #ifdef __cplusplus
 }
 #endif
+
+void timer6_init(uint16_t period,int use_us){
+	int prescaler = 0;
+	SystemCoreClockUpdate();
+	
+	prescaler = use_us ? ((SystemCoreClock/1000000)-1) : ((SystemCoreClock/1000)-1); //CountFreq=(CoreClock/Prescaler+1)
+	
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);
+	TIM_TimeBaseInitTypeDef myTimer;
+	TIM_TimeBaseStructInit(&myTimer);
+	myTimer.TIM_CounterMode=TIM_CounterMode_Up;//TIM6 can only be up timer
+	myTimer.TIM_Prescaler=prescaler;
+	myTimer.TIM_ClockDivision=TIM_CKD_DIV1;
+	myTimer.TIM_Period=(period-1);
+	TIM_TimeBaseInit(TIM6,&myTimer);
+	TIM_InternalClockConfig(TIM6);
+}
+
+void timer6_enableIRQ(void){		
+	TIM_ITConfig(TIM6,TIM_IT_Update,ENABLE);
+	NVIC_EnableIRQ(TIM6_DAC_IRQn);
+}
+
+void timer6_start(void){
+	TIM_Cmd(TIM6,ENABLE);
+}
+
+void timer6_stop(void){
+	TIM_Cmd(TIM6,DISABLE);
+}
+
+void __attribute__((weak)) timer6_callback(void){}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+void TIM6_DAC_IRQHandler(void){
+		TIM_ClearITPendingBit(TIM6,TIM_IT_Update);
+		timer6_callback();
+	}
+#ifdef __cplusplus
+}
+#endif
+
