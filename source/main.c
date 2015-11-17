@@ -4,19 +4,19 @@
 
 int main(){
 	adc_timer2_init(10000);
-	timer15_init(1000,1);
+	timer15_init(1000,PERIOD_IN_MICROSECONDS);
 	timer15_enableIRQ();
 	timer15_start();
 	
-	timer16_init(2000,1);
+	timer16_init(2000,PERIOD_IN_MILLISECONDS);
 	timer16_enableIRQ();
 	timer16_start();
 	
-	timer17_init(4000,1);
+	timer17_init(4000,PERIOD_IN_MICROSECONDS);
 	timer17_enableIRQ();
 	timer17_start();
 	
-	timer6_init(8000,1);
+	timer6_init(8000,PERIOD_IN_MICROSECONDS);
 	timer6_enableIRQ();
 	timer6_start();
 	

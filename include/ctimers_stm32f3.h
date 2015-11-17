@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define PERIOD_IN_MILLISECONDS 0
+#define PERIOD_IN_MICROSECONDS 1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
