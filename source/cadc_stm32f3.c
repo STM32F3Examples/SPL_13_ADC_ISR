@@ -1,10 +1,8 @@
 #include "cadc_stm32f3.h"
+#include "ctimers_stm32f3.h"
 #include "stm32f30x.h"                  // Device header
 
 void adc_init_injected(void);
-void timer2_init(int period,int use_us);
-void timer2_start(void);
-void timer2_stop(void);
 
 void adc_timer2_init(int ts_in_us){
 	timer2_init(ts_in_us,1);
@@ -39,7 +37,14 @@ void adc_init_injected(void){
 	ADC_InjectedInitTypeDef myADC;
 	ADC_InjectedStructInit(&myADC);
 	myADC.ADC_ExternalTrigInjecEventEdge=ADC_ExternalTrigInjecEventEdge_RisingEdge;
+	
+	//Connect timer with adc
 	myADC.ADC_ExternalTrigInjecConvEvent=ADC_ExternalTrigInjecConvEvent_2;//Start convertion on TIM2_OTRIG
+	TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_Update);//OTRIG : Update
+	
+	myADC.ADC_ExternalTrigInjecConvEvent=ADC_ExternalTrigInjecConvEvent_;//Start convertion on TIM2_OTRIG
+	TIM_SelectOutputTrigger(TIM15,TIM_TRGOSource_Update);//OTRIG : Update
+	
 	myADC.ADC_NbrOfInjecChannel=1;
 	myADC.ADC_InjecSequence1=ADC_InjectedChannel_6;
 	myADC.ADC_InjecSequence2=ADC_InjectedChannel_7;
@@ -55,33 +60,6 @@ void adc_init_injected(void){
 	/* wait for ADRDY */
 	ADC_Cmd(ADC1,ENABLE);
 	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_RDY));
-}
-
-void timer2_init(int period,int use_us){
-	int prescaler = 0;
-	SystemCoreClockUpdate();
-	
-	prescaler = use_us ? ((SystemCoreClock/1000000)-1) : ((SystemCoreClock/1000)-1); //CountFreq=(CoreClock/Prescaler+1)
-	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
-	TIM_TimeBaseInitTypeDef myTimer;
-	TIM_TimeBaseStructInit(&myTimer);
-	myTimer.TIM_CounterMode=TIM_CounterMode_Down;
-	myTimer.TIM_Prescaler=prescaler;
-	myTimer.TIM_ClockDivision=TIM_CKD_DIV1;
-	myTimer.TIM_Period=period;
-	TIM_TimeBaseInit(TIM2,&myTimer);
-	
-	TIM_InternalClockConfig(TIM2);
-	TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_Update);//OTRIG : Update
-}
-
-void timer2_start(void){
-	TIM_Cmd(TIM2,ENABLE);
-}
-
-void timer2_stop(void){
-	TIM_Cmd(TIM2,DISABLE);
 }
 
 int adc_count = 0;

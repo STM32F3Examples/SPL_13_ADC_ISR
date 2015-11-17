@@ -7,6 +7,12 @@
 extern "C" {
 #endif
 
+	void timer2_init(int time, int use_us);
+	void timer2_enableIRQ(void);
+	void timer2_start(void);
+	void timer2_stop(void);
+	void timer2_callback(void);//To be implemeted by user
+	
 	void timer15_init(uint16_t time, int use_us);
 	void timer15_enableIRQ(void);
 	void timer15_start(void);
