@@ -418,6 +418,11 @@
               <FileType>4</FileType>
               <FilePath>..\STM32F30x_StdPeriph_Driver\bin\SPL_STM32F302x8.lib</FilePath>
             </File>
+            <File>
+              <FileName>cadc_stm32f3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\cadc_stm32f3.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
