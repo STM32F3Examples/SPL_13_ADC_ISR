@@ -3,7 +3,10 @@
 #include "ctimers_stm32f3.h"
 
 int main(){
-	adc_timer2_init(10000);
+	timer2_init(100,PERIOD_IN_MICROSECONDS);
+	adc_injected(ADC_TRIGGER_TIMER2);
+	timer2_start();
+
 	timer15_init(1000,PERIOD_IN_MICROSECONDS);
 	timer15_enableIRQ();
 	timer15_start();

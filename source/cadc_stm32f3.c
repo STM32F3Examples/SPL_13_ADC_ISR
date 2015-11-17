@@ -2,16 +2,29 @@
 #include "ctimers_stm32f3.h"
 #include "stm32f30x.h"                  // Device header
 
-void adc_init_injected(void);
+void adc_init_injected(int use_trigger,int trigger);
 
-void adc_timer2_init(int ts_in_us){
-	timer2_init(ts_in_us,1);
-	adc_init_injected();
+void adc_injected(int adc_trigger){
+	uint32_t injected_trigger = 0;
+	if(adc_trigger == ADC_TRIGGER_NONE){
+		adc_init_injected(DONT_USE_TRIGGER,injected_trigger);
+	}else{
+		if(adc_trigger == ADC_TRIGGER_TIMER2){
+			injected_trigger = ADC_ExternalTrigInjecConvEvent_2;
+			TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_Update);//OTRIG : Update
+		}else if(adc_trigger == ADC_TRIGGER_TIMER6){
+			injected_trigger = ADC_ExternalTrigInjecConvEvent_14;
+			TIM_SelectOutputTrigger(TIM6,TIM_TRGOSource_Update);//OTRIG : Update
+		}else if(adc_trigger == ADC_TRIGGER_TIMER15){
+			injected_trigger = ADC_ExternalTrigInjecConvEvent_15;
+			TIM_SelectOutputTrigger(TIM15,TIM_TRGOSource_Update);//OTRIG : Update
+		}
+		adc_init_injected(USE_TRIGGER,injected_trigger);
+	}
 	ADC_StartInjectedConversion(ADC1);
-	timer2_start();
 }
 
-void adc_init_injected(void){
+void adc_init_injected(int use_trigger, int trigger){
 	//Confiure pins PC0[AN6], PC1[AN7] for analog input operation
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC,ENABLE);
 	GPIO_InitTypeDef myGPIO;
@@ -36,11 +49,10 @@ void adc_init_injected(void){
 	
 	ADC_InjectedInitTypeDef myADC;
 	ADC_InjectedStructInit(&myADC);
-	myADC.ADC_ExternalTrigInjecEventEdge=ADC_ExternalTrigInjecEventEdge_RisingEdge;
-	
+
+	myADC.ADC_ExternalTrigInjecEventEdge= (use_trigger) ? ADC_ExternalTrigInjecEventEdge_RisingEdge : ADC_ExternalTrigInjecEventEdge_None; 
 	//Connect timer with adc
-	myADC.ADC_ExternalTrigInjecConvEvent=ADC_ExternalTrigInjecConvEvent_2;//Start convertion on TIM2_OTRIG
-	TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_Update);//OTRIG : Update
+	myADC.ADC_ExternalTrigInjecConvEvent=trigger;//Start convertion on TIM2_OTRIG
 	
 	myADC.ADC_NbrOfInjecChannel=1;
 	myADC.ADC_InjecSequence1=ADC_InjectedChannel_6;
