@@ -423,6 +423,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\cadc_stm32f3.c</FilePath>
             </File>
+            <File>
+              <FileName>ctimers_stm32f3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\ctimers_stm32f3.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
