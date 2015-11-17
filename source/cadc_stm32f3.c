@@ -42,9 +42,6 @@ void adc_init_injected(void){
 	myADC.ADC_ExternalTrigInjecConvEvent=ADC_ExternalTrigInjecConvEvent_2;//Start convertion on TIM2_OTRIG
 	TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_Update);//OTRIG : Update
 	
-	myADC.ADC_ExternalTrigInjecConvEvent=ADC_ExternalTrigInjecConvEvent_;//Start convertion on TIM2_OTRIG
-	TIM_SelectOutputTrigger(TIM15,TIM_TRGOSource_Update);//OTRIG : Update
-	
 	myADC.ADC_NbrOfInjecChannel=1;
 	myADC.ADC_InjecSequence1=ADC_InjectedChannel_6;
 	myADC.ADC_InjecSequence2=ADC_InjectedChannel_7;
