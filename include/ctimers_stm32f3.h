@@ -19,6 +19,18 @@ extern "C" {
 	void timer15_stop(void);
 	void timer15_callback(void);//To be implemeted by user
 	
+	void timer16_init(uint16_t time, int use_us);
+	void timer16_enableIRQ(void);
+	void timer16_start(void);
+	void timer16_stop(void);
+	void timer16_callback(void);//To be implemeted by user
+	
+	void timer17_init(uint16_t time, int use_us);
+	void timer17_enableIRQ(void);
+	void timer17_start(void);
+	void timer17_stop(void);
+	void timer17_callback(void);//To be implemeted by user
+	
 #ifdef __cplusplus
 }
 #endif
