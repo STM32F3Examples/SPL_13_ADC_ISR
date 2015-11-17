@@ -7,14 +7,17 @@ void timer2_init(int period,int use_us);
 void timer2_start(void);
 void timer2_stop(void);
 
-unsigned int adc_val[4];
-
-int main(){
-	SystemCoreClockUpdate();
-	timer2_init(1000,1);
+void adc_timer2_init(int ts_in_us){
+	timer2_init(ts_in_us,1);
 	adc_init_injected();
 	ADC_StartInjectedConversion(ADC1);
 	timer2_start();
+};
+
+unsigned int adc_val[4];
+
+int main(){
+	adc_timer2_init(10000);
 	while(1){
 	}
 }
@@ -94,9 +97,6 @@ void timer2_init(int period,int use_us){
 	
 	TIM_InternalClockConfig(TIM2);
 	TIM_SelectOutputTrigger(TIM2,TIM_TRGOSource_Update);//OTRIG : Update
-	
-	//TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE);
-	//NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 void timer2_start(void){
