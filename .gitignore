@@ -1,9 +1,13 @@
 /gcc/nbproject
 /gcc/objects
-/gcc/salida.elf
+/gcc/*.elf
 /mdk/*
+tests/gmock_test
 /nbproject
 
 !/mdk/*.uvprojx
 !/mdk/*.uvoptx
 !/mdk/RTE
+
+*.swp
+*.[oa]
